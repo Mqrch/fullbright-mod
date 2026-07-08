@@ -1,0 +1,18 @@
+{
+  "id": "fullbright-mod",
+  "name": "Fullbright Mod",
+  "version": "1.0.0",
+  "author": "Mqrch",
+  "description": "Adjusts tile brightness to a custom minimum floor without breaking colored dynamic lighting.",
+  "entry_dll": "FullbrightMod.dll",
+  "icon": "icon.png",
+
+  "keybinds": [
+    {
+      "id": "toggle-fullbright",
+      "label": "Toggle Fullbright",
+      "description": "Enables or disables the minimum brightness floor",
+      "default": "B"
+    }
+  ]
+}
