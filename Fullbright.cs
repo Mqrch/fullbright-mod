@@ -25,6 +25,30 @@ namespace FullbrightMod
         }
     }
 
+    // PATCH 3 (NEW): Intercept clamped color checks used by shaders, waterfalls, and UI
+    [HarmonyPatch(typeof(Lighting), nameof(Lighting.GetColorClamped), new Type[] { typeof(int), typeof(int), typeof(Color) })]
+    public static class Patch_Lighting_GetColorClamped
+    {
+        static void Postfix(ref Color __result)
+        {
+            LightingHelper.ApplyBrightnessFloor(ref __result);
+        }
+    }
+
+    // PATCH 4 (NEW): Intercept float brightness checks used by LiquidRenderer to prevent liquid culling!
+    [HarmonyPatch(typeof(Lighting), nameof(Lighting.Brightness), new Type[] { typeof(int), typeof(int) })]
+    public static class Patch_Lighting_Brightness
+    {
+        static void Postfix(ref float __result)
+        {
+            if (Mod.Instance?.Config == null || !Mod.Instance.Config.Enabled)
+                return;
+
+            float minFloat = Math.Max(0f, Math.Min(1f, Mod.Instance.Config.MinimumBrightness));
+            __result = Math.Max(__result, minFloat);
+        }
+    }
+
     public static class LightingHelper
     {
         public static void ApplyBrightnessFloor(ref Color color)
@@ -33,7 +57,7 @@ namespace FullbrightMod
             if (Mod.Instance?.Config == null || !Mod.Instance.Config.Enabled)
                 return;
 
-            // FIX: Replaced Math.Clamp with .NET 4.8 compatible Math.Max/Math.Min
+            // Use .NET 4.8 compatible Math.Max/Math.Min
             float rawVal = Mod.Instance.Config.MinimumBrightness;
             float minFloat = Math.Max(0f, Math.Min(1f, rawVal));
             
