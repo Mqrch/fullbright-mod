@@ -17,6 +17,9 @@ namespace FullbrightMod
 
         [Client] 
         public float MinimumBrightness { get; set; } = 0.4f; // 0.0f is pitch black, 1.0f is max brightness
+
+        [Client]
+        public bool BrightItems { get; set; } = false;
     }
 
     public class Mod : IMod, IModLifecycle

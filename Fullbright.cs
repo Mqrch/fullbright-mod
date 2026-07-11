@@ -25,7 +25,7 @@ namespace FullbrightMod
         }
     }
 
-    // PATCH 3 (NEW): Intercept clamped color checks used by shaders, waterfalls, and UI
+    // PATCH 3: Intercept clamped color checks used by shaders, waterfalls, and UI
     [HarmonyPatch(typeof(Lighting), nameof(Lighting.GetColorClamped), new Type[] { typeof(int), typeof(int), typeof(Color) })]
     public static class Patch_Lighting_GetColorClamped
     {
@@ -35,7 +35,7 @@ namespace FullbrightMod
         }
     }
 
-    // PATCH 4 (NEW): Intercept float brightness checks used by LiquidRenderer to prevent liquid culling!
+    // PATCH 4: Intercept float brightness checks used by LiquidRenderer to prevent liquid culling!
     [HarmonyPatch(typeof(Lighting), nameof(Lighting.Brightness), new Type[] { typeof(int), typeof(int) })]
     public static class Patch_Lighting_Brightness
     {
@@ -46,6 +46,22 @@ namespace FullbrightMod
 
             float minFloat = Math.Max(0f, Math.Min(1f, Mod.Instance.Config.MinimumBrightness));
             __result = Math.Max(__result, minFloat);
+        }
+    }
+
+    // PATCH 5: Intercept item rendering to force 100% brightness on items
+    [HarmonyPatch(typeof(Item), nameof(Item.GetAlpha), new Type[] { typeof(Color) })]
+    public static class Patch_Item_GetAlpha
+    {
+        static void Prefix(ref Color newColor)
+        {
+            // Check if the config is loaded and the BrightItems toggle is ON
+            if (Mod.Instance?.Config != null && Mod.Instance.Config.BrightItems)
+            {
+                // Override the incoming ambient light with maximum brightness
+                // This ignores the MinimumBrightness tile floor completely!
+                newColor = Color.White;
+            }
         }
     }
 
