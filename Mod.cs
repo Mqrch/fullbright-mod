@@ -45,7 +45,7 @@ namespace FullbrightMod
     {
         public string Id => "fullbright-mod";
         public string Name => "Fullbright Mod";
-        public string Version => "1.0.3";
+        public string Version => "1.0.0";
 
         // Static instance so our Harmony patches in Fullbright.cs can read the config
         public static Mod Instance { get; private set; }
