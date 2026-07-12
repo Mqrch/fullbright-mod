@@ -15,18 +15,29 @@ namespace FullbrightMod
         [Client] 
         public bool Enabled { get; set; } = true;
 
-        [Client] 
+        [Client, Label("Brightness Level"), Description("The minimum brightness level for tiles and entities")]
         public float MinimumBrightness { get; set; } = 0.4f; // 0.0f is pitch black, 1.0f is max brightness
 
-        [Client]
+        [Client, Label("Bright Items"), Description("Render items at full brightness")]
         public bool BrightItems { get; set; } = false;
+
+        [Client, Label("Item Color"), Description("The color to use for bright items")]
+        [Options("White", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Pink", "Orange")]
+        public string ItemColor { get; set; } = "White";
+
+        [Client, Label("Bright Enemies"), Description("Render enemies at full brightness")]
+        public bool BrightEnemies { get; set; } = false;
+
+        [Client, Label("Enemy Color"), Description("The color to use for bright enemies")]
+        [Options("White", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Pink", "Orange")]
+        public string EnemyColor { get; set; } = "Red";
     }
 
     public class Mod : IMod, IModLifecycle
     {
         public string Id => "fullbright-mod";
         public string Name => "Fullbright Mod";
-        public string Version => "1.0.0";
+        public string Version => "1.0.3";
 
         // Static instance so our Harmony patches in Fullbright.cs can read the config
         public static Mod Instance { get; private set; }

@@ -55,12 +55,25 @@ namespace FullbrightMod
     {
         static void Prefix(ref Color newColor)
         {
-            // Check if the config is loaded and the BrightItems toggle is ON
             if (Mod.Instance?.Config != null && Mod.Instance.Config.BrightItems)
             {
-                // Override the incoming ambient light with maximum brightness
-                // This ignores the MinimumBrightness tile floor completely!
-                newColor = Color.White;
+                newColor = LightingHelper.GetXnaColor(Mod.Instance.Config.ItemColor);
+            }
+        }
+    }
+
+    // PATCH 6: Intercept NPC rendering to force 100% brightness on hostile mobs
+    [HarmonyPatch(typeof(NPC), nameof(NPC.GetAlpha), new Type[] { typeof(Color) })]
+    public static class Patch_NPC_GetAlpha
+    {
+        static void Prefix(NPC __instance, ref Color newColor)
+        {
+            if (Mod.Instance?.Config != null && Mod.Instance.Config.BrightEnemies)
+            {
+                if (!__instance.friendly && __instance.damage > 0)
+                {
+                    newColor = LightingHelper.GetXnaColor(Mod.Instance.Config.EnemyColor);
+                }
             }
         }
     }
@@ -83,6 +96,26 @@ namespace FullbrightMod
             color.R = Math.Max(color.R, minByte);
             color.G = Math.Max(color.G, minByte);
             color.B = Math.Max(color.B, minByte);
+        }
+
+        // Translates the F6 enum choice into an actual XNA Color
+        public static Color GetXnaColor(string colorName)
+        {
+            // Safety check in case the string is null or empty
+            if (string.IsNullOrWhiteSpace(colorName)) return Color.White;
+
+            switch (colorName.Trim().ToLower())
+            {
+                case "red": return Color.Red;
+                case "green": return Color.LimeGreen; 
+                case "blue": return Color.DeepSkyBlue; 
+                case "yellow": return Color.Yellow;
+                case "purple": return Color.Magenta;
+                case "cyan": return Color.Cyan;
+                case "pink": return Color.HotPink;
+                case "orange": return Color.Orange;
+                default: return Color.White; // Fallback if a typo is made in the menu
+            }
         }
     }
 }
