@@ -16,7 +16,7 @@ namespace FullbrightMod
         public bool Enabled { get; set; } = true;
 
         [Client, Label("Brightness Level"), Description("The minimum brightness level for tiles and entities")]
-        public float MinimumBrightness { get; set; } = 0.4f; // 0.0f is pitch black, 1.0f is max brightness
+        public float MinimumBrightness { get; set; } = 0.4f;
 
         [Client, Label("Bright Items"), Description("Render items at full brightness")]
         public bool BrightItems { get; set; } = false;
@@ -25,12 +25,20 @@ namespace FullbrightMod
         [Options("White", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Pink", "Orange")]
         public string ItemColor { get; set; } = "White";
 
+        // Controls transparency (0.0f = invisible, 1.0f = solid color)
+        [Client, Label("Item Tint"), Description("Tint strength of bright items")]
+        public float ItemOpacity { get; set; } = 0.6f;
+
         [Client, Label("Bright Enemies"), Description("Render enemies at full brightness")]
         public bool BrightEnemies { get; set; } = false;
 
         [Client, Label("Enemy Color"), Description("The color to use for bright enemies")]
         [Options("White", "Red", "Green", "Blue", "Yellow", "Purple", "Cyan", "Pink", "Orange")]
         public string EnemyColor { get; set; } = "Red";
+
+        // Controls transparency for enemies
+        [Client, Label("Enemy Tint"), Description("Tint strength of bright enemies")]
+        public float EnemyOpacity { get; set; } = 0.6f;
     }
 
     public class Mod : IMod, IModLifecycle

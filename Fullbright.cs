@@ -57,7 +57,8 @@ namespace FullbrightMod
         {
             if (Mod.Instance?.Config != null && Mod.Instance.Config.BrightItems)
             {
-                newColor = LightingHelper.GetXnaColor(Mod.Instance.Config.ItemColor);
+                Color baseColor = LightingHelper.GetXnaColor(Mod.Instance.Config.ItemColor);
+                newColor = Color.Lerp(Color.White, baseColor, Mod.Instance.Config.ItemOpacity);
             }
         }
     }
@@ -72,7 +73,8 @@ namespace FullbrightMod
             {
                 if (!__instance.friendly && __instance.damage > 0)
                 {
-                    newColor = LightingHelper.GetXnaColor(Mod.Instance.Config.EnemyColor);
+                    Color baseColor = LightingHelper.GetXnaColor(Mod.Instance.Config.EnemyColor);
+                    newColor = Color.Lerp(Color.White, baseColor, Mod.Instance.Config.EnemyOpacity);
                 }
             }
         }
